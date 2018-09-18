@@ -2,18 +2,26 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	log "github.com/sirupsen/logrus"
 )
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{})
+	log.SetLevel(log.InfoLevel)
+}
 
 func main() {
 	err := run()
 	if err != nil {
-		fmt.Println(err)
+		log.Warn(err)
 		os.Exit(1)
 	}
 	os.Exit(0)
@@ -42,5 +50,10 @@ func run() error {
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("bad status: %s", res.Status)
 	}
+	var data interface{}
+	if err = json.Unmarshal([]byte(os.Args[2]), &data); err != nil {
+		return err
+	}
+	log.WithField("data", data).Info("タスク追加に成功しました。")
 	return nil
 }
