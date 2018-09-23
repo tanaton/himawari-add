@@ -42,7 +42,7 @@ func run() error {
 	}
 	w.Close() // 閉じることでPOSTデータが出来上がる模様
 
-	res, err := http.Post("http://127.0.0.1:1029/task/add", w.FormDataContentType(), &buf)
+	res, err := http.Post("http://127.0.0.1:10616/task/add", w.FormDataContentType(), &buf)
 	if err != nil {
 		return err
 	}
